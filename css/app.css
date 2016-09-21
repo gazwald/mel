@@ -1,10 +1,12 @@
 p{ 
-    color: #9900CC;
+    color: #FFFFFF;
     font-size: 2000%;
     font-family: 'Roboto Slab', serif;
 }
 body{ 
-    background: black;
+	background: -moz-linear-gradient(top, #d369a0 0%, #992691 50%, #526ea5 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #d369a0 0%,#992691 50%,#526ea5 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #d369a0 0%,#992691 50%,#526ea5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 #magic{
     display:flex;
@@ -22,17 +24,14 @@ body{
 @keyframes pulsate {
     0% {
         opacity: 1.0;
-        color: #CC00CC;
         font-size: 2000%;
     }
     50% {
         opacity: 1.5;
-        color: #9900CC;
         font-size: 3000%;
     }
     100% {
         opacity: 1.0;
-        color: #CC00CC;
         font-size: 2000%;
     }
 }
