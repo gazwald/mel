@@ -1,0 +1,15 @@
+p{ 
+    color: red;
+    font-size: 1000%; 
+}
+body{ 
+    background: black;
+}
+#magic{
+    display:flex;
+    align-items: center; /* Vertical center alignment */
+    justify-content: center; /* Horizontal center alignment */
+}
+#fullscreen{
+    min-height: 100%;
+}
