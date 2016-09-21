@@ -1,5 +1,5 @@
 # Mel
-Simple static site for Mel.
+Simple static site for [Mel](http://mel.gazwald.com).
 
 Makes heavy use of Foundation and stuff I've Googled
 
