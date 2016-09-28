@@ -1,6 +1,7 @@
 p{ 
     color: #FFFFFF;
-    font-size: 2000%;
+    text-shadow: 0vw 0vw 20vw;
+    font-size: 20vw;
     font-family: 'Roboto Slab', serif;
 }
 body{ 
@@ -15,23 +16,4 @@ body{
 }
 #fullscreen{
     min-height: 100%;
-}
-#pulsate {
-    animation: pulsate 5s ease-out;
-    animation-iteration-count: infinite;
-    opacity: 1.0;
-}
-@keyframes pulsate {
-    0% {
-        opacity: 1.0;
-        font-size: 2000%;
-    }
-    50% {
-        opacity: 1.5;
-        font-size: 3000%;
-    }
-    100% {
-        opacity: 1.0;
-        font-size: 2000%;
-    }
 }
