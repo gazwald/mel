@@ -12,14 +12,13 @@ class DeployStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        domain = "gazwald.com"
+        domain = os.getenv('DOMAIN', 'gazwald.com')
         sub_domain = "meltest." + domain
 
-        certificate = certificatemanager.Certificate(self, "Certificate",
-            domain_name=domain,
-            subject_alternative_names=["*." + domain],
-            validation_method=certificatemanager.ValidationMethod.DNS
-        )
+        certificate_id = 'c1636661-e3bb-497f-b057-8269a50796c8'
+        arn = 'arn:aws:acm:us-east-1:{account}:certificate/{certificate_id}'.format(account=os.getenv('CDK_DEFAULT_ACCOUNT'),
+                                                                                    certificate_id=certificate_id)
+        certificate = certificatemanager.Certificate.from_certificate_arn(self, "Certificate", arn)
 
         s3_bucket_source = s3.Bucket(self, "Bucket")
 
