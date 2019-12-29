@@ -1,0 +1,6 @@
+.env
+deploy.env
+deploy/cdk.out
+*.pyc
+*.swp
+__pycache__
