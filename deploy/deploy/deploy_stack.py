@@ -13,7 +13,7 @@ class DeployStack(core.Stack):
         super().__init__(scope, id, **kwargs)
 
         domain = os.getenv('DOMAIN', 'gazwald.com')
-        sub_domain = "meltest1." + domain
+        sub_domain = "meltest2." + domain
 
         certificate_id = 'c1636661-e3bb-497f-b057-8269a50796c8'
         arn = 'arn:aws:acm:us-east-1:{account}:certificate/{certificate_id}'.format(account=os.getenv('CDK_DEFAULT_ACCOUNT'),
@@ -28,9 +28,12 @@ class DeployStack(core.Stack):
             destination_bucket=s3_bucket_source,
         )
 
+        s3_origin_config = cloudfront.S3OriginConfig(s3_bucket_source=s3_bucket_source,
+                                                     origin_access_identity=cloudfront.OriginAccessIdentity(self, "OAI"))
+
         distribution = cloudfront.CloudFrontWebDistribution(self, "AnAmazingWebsiteProbably",
             origin_configs=[cloudfront.SourceConfiguration(
-                s3_origin_source={"s3_bucket_source": s3_bucket_source},
+                s3_origin_source=s3_origin_config,
                 behaviors=[cloudfront.Behavior(is_default_behavior=True)]
             )],
             viewer_certificate=cloudfront.ViewerCertificate.from_acm_certificate(certificate,
