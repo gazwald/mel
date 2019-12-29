@@ -1,6 +1,7 @@
 import os
 
 from aws_cdk import core
+import aws_cdk.aws_certificatemanager as certificatemanager
 import aws_cdk.aws_s3 as s3
 import aws_cdk.aws_s3_deployment as s3deploy
 import aws_cdk.aws_cloudfront as cloudfront
@@ -10,6 +11,15 @@ class DeployStack(core.Stack):
 
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
+
+        domain = "gazwald.com"
+        sub_domain = "meltest." + domain
+
+        certificate = certificatemanager.Certificate(self, "Certificate",
+            domain_name=domain,
+            subject_alternative_names=["*." + domain],
+            validation_method=certificatemanager.ValidationMethod.DNS
+        )
 
         s3_bucket_source = s3.Bucket(self, "Bucket")
 
@@ -24,5 +34,9 @@ class DeployStack(core.Stack):
                 s3_origin_source={"s3_bucket_source": s3_bucket_source},
                 behaviors=[cloudfront.Behavior(is_default_behavior=True)]
             )],
-            viewer_certificate=cloudfront.ViewerCertificate.from_cloud_front_default_certificate("mel.gazwald.com")
+            viewer_certificate=cloudfront.ViewerCertificate.from_acm_certificate(certificate,
+                aliases=[sub_domain],
+                security_policy=cloudfront.SecurityPolicyProtocol.TLS_V1,
+                ssl_method=cloudfront.SSLMethod.SNI
+            )
         )
