@@ -15,22 +15,39 @@ class DeployStack(core.Stack):
         domain = os.getenv('DOMAIN', 'gazwald.com')
         sub_domain = "mel." + domain
 
+        """
+        Get existing ACM certificate
+        """
         certificate_id = '92fca839-f71e-41ce-bfe0-458a09ae60e9'
         arn = 'arn:aws:acm:us-east-1:{account}:certificate/{certificate_id}'.format(account=os.getenv('CDK_DEFAULT_ACCOUNT'),
                                                                                     certificate_id=certificate_id)
         certificate = certificatemanager.Certificate.from_certificate_arn(self, "mel_gazwald_cert", arn)
 
+        """
+        Create S3 Bucket for assets"
+        """
         s3_bucket_source = s3.Bucket(self, "mel_gazwald_s3", removal_policy=core.RemovalPolicy.DESTROY)
 
+        """
+        Gather assets and deploy them to the S3 bucket
+        Assumes path, relative to this directory, is ../src
+        """
         assets_directory = os.path.join(os.getcwd(), '..', 'src')
         s3deploy.BucketDeployment(self, "mel_gazwald_deploy",
             sources=[s3deploy.Source.asset(assets_directory)],
             destination_bucket=s3_bucket_source,
         )
 
+        """
+        Create OAI policy for S3/CloudFront
+        Means bucket does not need to be public
+        """
         s3_origin_config = cloudfront.S3OriginConfig(s3_bucket_source=s3_bucket_source,
                                                      origin_access_identity=cloudfront.OriginAccessIdentity(self, "mel_gazwald_OAI"))
 
+        """
+        Pull it all together in a CloudFront distribution
+        """
         distribution = cloudfront.CloudFrontWebDistribution(self, "mel_gazwald_cloudfront",
             origin_configs=[cloudfront.SourceConfiguration(
                 s3_origin_source=s3_origin_config,
